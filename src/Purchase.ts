@@ -1,51 +1,32 @@
-import { v4 as uuid } from 'uuid';
+import Coupon from "./Coupon";
+import Cpf from "./Cpf";
+import Item from "./Item";
+import PurchaseItem from "./PurchaseItem";
 
-import { Cpf } from "./Cpf";
-import { PurchaseItem } from "./PurchaseItem";
+export default class Purchase {
+    cpf: Cpf;
+    purchaseItem: PurchaseItem[];
+    private coupon?: Coupon;
 
-export class Purchase {
-    readonly id: string;
-    customer: Cpf;
-    items: PurchaseItem[];
-    private discount: number = 0;
-
-    constructor(cpf: string, discount: number = 0) {
-        this.customer = new Cpf(cpf);
-        this.items = [];
-        this.discount = discount;
-        this.id = uuid()
+    constructor(cpf: string) {
+        this.cpf = new Cpf(cpf);
+        this.purchaseItem = [];
     }
 
-    addItem = (item: PurchaseItem) => {
-        this.items.push(item);
+    addItem = (item: Item, quantity: number, price: number) => {
+        this.purchaseItem.push(new PurchaseItem(item.id, quantity, price));
     }
 
-    addItems = (items: PurchaseItem[]) => {
-        this.items.push(...items);
-    }
-
-    removeItem = (item: PurchaseItem) => {
-        const index = this.items.indexOf(item);
-        this.items.splice(index, 1);
-    }
-
-    addDiscount = (discount: number) => {
-        this.discount = discount;
-    }
-
-    getDiscountPercent = () => {
-        return this.discount;
-    }
-
-    getDiscount = () => {
-        return this.getTotal() * (this.discount / 100);
+    addCoupon = (coupon: Coupon) => {
+        this.coupon = coupon;
     }
 
     getTotal = () => {
-        return this.items.reduce((total, item) => total + item.value, 0);
+        let total = this.purchaseItem.reduce((total, item) => total + item.getTotal(), 0);
+        if(this.coupon){
+            total -= this.coupon.getDiscount(total);
+        }
+        return total;
     }
 
-    getNetTotal = () => {
-        return this.getTotal() - this.getDiscount();
-    }
 }

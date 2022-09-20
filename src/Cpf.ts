@@ -1,13 +1,12 @@
-export class Cpf {
+export default class Cpf {
     private CPF_DIGIT_10 = 10;
     private CPF_DIGIT_11 = 11;
 
-    constructor(readonly cpf?: string) {
+    constructor(readonly cpf: string) {
         if (!this.isValidCpf(cpf)) throw new Error("Invalid CPF")
-        this.cpf = this.removeNonDigits(cpf);
     }
 
-    private isValidCpf = (cpf?: string) => {
+    private isValidCpf = (cpf: string) => {
         if (!cpf) return false;
         cpf = this.removeNonDigits(cpf);
         if (!this.isValidLength(cpf)) return false;
@@ -19,7 +18,7 @@ export class Cpf {
         return calculatedLastDigits.includes(cpfLastDigits);
     }
 
-    private removeNonDigits = (cpf?: string): string => cpf ? cpf.replace(/\D/g, "") : "";
+    private removeNonDigits = (cpf: string): string => cpf.replace(/\D/g, "");
 
     private isValidLength = (cpf: string): boolean => cpf.length === 11;
 

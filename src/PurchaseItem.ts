@@ -1,9 +1,13 @@
-import { v4 as uuid } from 'uuid';
+import { v4 as uuid } from "uuid";
 
-export class PurchaseItem {
+export default class PurchaseItem {
     readonly id: string;
 
-    constructor(readonly description: string, readonly quantity: number, readonly value: number,) {
+    constructor(readonly idItem: string, readonly quantity: number, readonly price: number) {
         this.id = uuid();
+    }
+
+    getTotal() {
+        return this.quantity * this.price;
     }
 }

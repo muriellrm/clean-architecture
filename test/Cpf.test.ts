@@ -1,9 +1,9 @@
-import { Cpf } from "../src/Cpf";
+import Cpf from "../src/Cpf";
 
 describe("src > class Cpf", () => {
     test("Deve testar um cpf válido", function () {
         const { cpf } = new Cpf("004.799.499-13");
-        expect(cpf).toBe("00479949913");
+        expect(cpf).toBe("004.799.499-13");
     });
 
     test("Deve testar um cpf válido sem mascara", function () {
