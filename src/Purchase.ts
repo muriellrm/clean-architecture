@@ -5,25 +5,33 @@ import PurchaseItem from "./PurchaseItem";
 
 export default class Purchase {
     cpf: Cpf;
-    purchaseItem: PurchaseItem[];
+    purchaseItems: PurchaseItem[];
     private coupon?: Coupon;
 
     constructor(cpf: string) {
         this.cpf = new Cpf(cpf);
-        this.purchaseItem = [];
+        this.purchaseItems = [];
     }
 
     addItem = (item: Item, quantity: number, price: number) => {
-        this.purchaseItem.push(new PurchaseItem(item.id, quantity, price));
+        const itemAlreadyExists = this.purchaseItems.find(purchaseItem => purchaseItem.idItem === item.id);
+        if(itemAlreadyExists){
+            throw new Error("This item has already been added to your order.");
+        }
+        this.purchaseItems.push(new PurchaseItem(item.id, quantity, price));
     }
 
     addCoupon = (coupon: Coupon) => {
+        const today = new Date();
+        if (today.getTime() > coupon.expiration.getTime()) {
+            throw new Error("This coupon is already expired");
+        }
         this.coupon = coupon;
     }
 
     getTotal = () => {
-        let total = this.purchaseItem.reduce((total, item) => total + item.getTotal(), 0);
-        if(this.coupon){
+        let total = this.purchaseItems.reduce((total, item) => total + item.getTotal(), 0);
+        if (this.coupon) {
             total -= this.coupon.getDiscount(total);
         }
         return total;

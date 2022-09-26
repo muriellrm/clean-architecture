@@ -1,6 +1,6 @@
 export default class Coupon {
 
-    constructor(readonly description: string, readonly value: number) {
+    constructor(readonly description: string, readonly value: number, readonly expiration: Date) {
     }
 
     getDiscount = (total: number): number => {
